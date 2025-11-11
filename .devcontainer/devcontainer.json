@@ -1,12 +1,7 @@
 {
   "name": "MySQL Learning Environment",
-  "image": "mcr.microsoft.com/devcontainers/universal:2",
-  "features": {
-    "ghcr.io/devcontainers/features/mysql:1": {
-      "version": "8.0",
-      "password": "password"
-    }
-  },
-  "forwardPorts": [3306],
-  "postCreateCommand": "mysql -u root -ppassword < setup.sql"
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "app",
+  "workspaceFolder": "/workspace",
+  "postCreateCommand": "sleep 10 && mysql -h db -u root -ppassword < /workspace/setup.sql"
 }
