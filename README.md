@@ -27,14 +27,89 @@ GitHub Codespacesで動作するMySQL学習用リポジトリです。社員表�
 1. このリポジトリで「Code」ボタンをクリック
 2. 「Codespaces」タブを選択
 3. 「Create codespace on main」をクリック
-4. 数分待つと自動的にMySQLとテーブルが作成されます
+4. 起動を待つ（数分かかります）
 
-### 2. MySQLに接続
+### 2. MySQLクライアントをインストール
 
 ターミナルで以下のコマンドを実行：
 
 ```bash
+sudo apt-get update && sudo apt-get install -y mysql-client
+```
+
+### 3. MySQLの起動を確認
+
+```bash
+# MySQLが起動するまで待つ（準備ができるとエラーが出なくなります）
+mysql -h db -u root -ppassword -e "SELECT 1"
+```
+
+### 4. データベースとテーブルを作成
+
+MySQLに接続：
+
+```bash
+mysql -h db -u root -ppassword
+```
+
+以下のSQLを実行：
+
+```sql
+-- データベース作成
+CREATE DATABASE company_db;
+USE company_db;
+
+-- 部署表
+CREATE TABLE departments (
+    department_id VARCHAR(10) PRIMARY KEY,
+    department_name VARCHAR(100) NOT NULL
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 社員表
+CREATE TABLE employees (
+    employee_id VARCHAR(10) PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    gender ENUM('男', '女') NOT NULL,
+    birth_date DATE NOT NULL,
+    salary DECIMAL(10, 2) NOT NULL,
+    department_id VARCHAR(10) NOT NULL,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- 部署データ
+INSERT INTO departments (department_id, department_name) VALUES 
+    ('001', '総務部'),
+    ('002', '経理部'),
+    ('003', '営業部');
+
+-- 社員データ
+INSERT INTO employees (employee_id, name, gender, birth_date, salary, department_id) VALUES 
+    ('0001', '佐藤一郎', '男', '1951-01-01', 450000, '002'),
+    ('0002', '鈴木二郎', '男', '1962-02-02', 400000, '003'),
+    ('0003', '高橋花子', '女', '1973-03-03', 350000, '001'),
+    ('0004', '田中四郎', '男', '1984-04-04', 300000, '001'),
+    ('0005', '渡辺良子', '女', '1995-05-05', 250000, '003');
+
+-- MySQLから抜ける
+EXIT;
+```
+
+### 5. 動作確認
+
+```bash
+# MySQLに接続
 mysql -h db -u root -ppassword company_db
+```
+
+MySQLプロンプト内で：
+
+```sql
+-- テーブル確認
+SHOW TABLES;
+
+-- データ確認
+SELECT * FROM employees;
+SELECT * FROM departments;
 ```
 
 ## 💡 基本的な使い方
@@ -105,6 +180,15 @@ FROM employees e
 JOIN departments d ON e.department_id = d.department_id;
 ```
 
+### 並び替え
+
+```sql
+-- 性別で分けて、各性別内で生年月日順
+SELECT gender, name, birth_date 
+FROM employees 
+ORDER BY FIELD(gender, '男', '女'), birth_date ASC;
+```
+
 ## 📝 練習問題
 
 ### 初級
@@ -161,9 +245,22 @@ mysql-learning/
 ├── .devcontainer/
 │   ├── devcontainer.json    # Codespaces設定
 │   └── docker-compose.yml   # Docker構成
-├── setup.sql                # 初期データ
-└── README.md               # このファイル
+└── README.md                # このファイル
 ```
+
+## 🔄 次回以降の起動
+
+Codespacesを再起動した場合：
+
+1. Codespacesを開く
+2. データは保持されているので、すぐに使えます
+3. MySQLに接続：
+
+```bash
+mysql -h db -u root -ppassword company_db
+```
+
+**注意:** Codespacesを削除すると、データベースの内容も削除されます。その場合は手順4から再度実行してください。
 
 ## ⚠️ 注意事項
 
