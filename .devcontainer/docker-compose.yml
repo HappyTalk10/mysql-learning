@@ -18,6 +18,7 @@ services:
       MYSQL_DATABASE: company_db
     volumes:
       - mysql-data:/var/lib/mysql
+      - ../setup.sql:/docker-entrypoint-initdb.d/setup.sql
 
 volumes:
   mysql-data:
