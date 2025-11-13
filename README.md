@@ -257,7 +257,11 @@ Codespacesを再起動した場合：
 3. MySQLに接続：
 
 ```bash
+#MySQLに接続
 mysql -h db -u root -ppassword company_db
+
+#データベース変更
+USE company_db
 ```
 
 **注意:** Codespacesを削除すると、データベースの内容も削除されます。その場合は手順4から再度実行してください。
