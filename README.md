@@ -97,7 +97,7 @@ EXIT;
 ### 5. 動作確認
 
 ```bash
-# MySQLに接続
+# MySQLに接続（データベースを指定）
 mysql -h db -u root -ppassword company_db
 ```
 
@@ -110,6 +110,12 @@ SHOW TABLES;
 -- データ確認
 SELECT * FROM employees;
 SELECT * FROM departments;
+```
+
+**注意:** データベースを指定せずに接続した場合は、以下を実行してください：
+
+```sql
+USE company_db;
 ```
 
 ## 💡 基本的な使い方
@@ -257,11 +263,7 @@ Codespacesを再起動した場合：
 3. MySQLに接続：
 
 ```bash
-#MySQLに接続
 mysql -h db -u root -ppassword company_db
-
-#データベース変更
-USE company_db
 ```
 
 **注意:** Codespacesを削除すると、データベースの内容も削除されます。その場合は手順4から再度実行してください。
